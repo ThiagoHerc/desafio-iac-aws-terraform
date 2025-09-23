@@ -230,7 +230,8 @@ Vamos começar a diversão! 🥳
     > [!TIP]
     > O arquivo `variables.tf` é o arquivo que define as variáveis que serão usadas na infraestrutura, nesse caso, o IP público para o Security Group SSH.
 
-10. Agora é hora de instalar o Ansible **Lembrando que ele deve ser instalado em um Linux**
+10. Agora é hora de instalar o Ansible
+**Lembrando que ele deve ser instalado e executado de um Linux**
     ```bash
     sudo yum install -y ansible # Red Hat, CentOS, OpenSuse e Derivados
     ```
