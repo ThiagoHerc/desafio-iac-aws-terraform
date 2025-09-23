@@ -253,7 +253,7 @@ Vamos começar a diversão! 🥳
 
 11. Agora é hora de criar o playbook do Ansible para irá provisionar a página
 
-Crie um arquivo chamado `playbook.yml` na raiz do repositório
+Crie um arquivo chamado `playbook.yml` na raiz do repositório e adicione o seguinte conteúdo:
 
 ```yaml
 ---
