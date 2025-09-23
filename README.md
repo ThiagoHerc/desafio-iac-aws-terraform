@@ -149,14 +149,24 @@ Vamos começar a diversão! 🥳
 
 6. Agora vamos criar o arquivo `data.tf`, incluindo esse trecho abaixo nele:
     ```hcl
-    data "aws_ami" "amazon_linux" {
-        most_recent = true
-        owners      = ["amazon"]
+    data "aws_ami" "amazon_linux_2023" {
+      most_recent = true
+      owners      = ["amazon"]
 
-        filter {
-            name   = "name"
-            values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-        }
+      filter {
+        name   = "name"
+        values = ["al2023-ami-*-x86_64"] # Or specify a more precise pattern like "al2023-ami-2023.*-x86_64"
+      }
+
+      filter {
+        name   = "architecture"
+        values = ["x86_64"]
+      }
+
+      filter {
+        name   = "virtualization-type"
+        values = ["hvm"]
+      }
     }
     ```
 
@@ -220,7 +230,27 @@ Vamos começar a diversão! 🥳
     > [!TIP]
     > O arquivo `variables.tf` é o arquivo que define as variáveis que serão usadas na infraestrutura, nesse caso, o IP público para o Security Group SSH.
 
-10. Agora é hora de criar o playbook do Ansible para irá provisionar a página
+10. Agora é hora de instalar o Ansible **Lembrando que ele deve ser instalado em um Linux**
+    ```bash
+    sudo yum install -y ansible # Red Hat, CentOS, OpenSuse e Derivados
+    ```
+    ```bash
+    sudo dnf install -y ansible # Fedora e Derivados
+    ```
+    ```bash
+    sudo apt install -y ansible # Ubuntu, Debian e Derivados
+    ```
+    ```bash
+    sudo pacman -S ansible # Arch Linux e Derivados
+    ```
+    ```bash
+    brew install ansible # macOS
+    ```
+    ```bash
+    pip install ansible # Python
+    ```
+
+11. Agora é hora de criar o playbook do Ansible para irá provisionar a página
 
 ```yaml
 ---
@@ -274,17 +304,27 @@ Vamos começar a diversão! 🥳
         state: restarted
 ```
 
-11. Agora precisamos criar o inventário do Ansible para que ele possa acessar a instância EC2 que foi criada pelo Terraform.
+12. Agora precisamos criar o arquivo de inventário do Ansible para que ele possa acessar a instância EC2 que foi criada pelo Terraform.
 
-```bash
-touch inventory
-echo "[all]" >> inventory
-echo "ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2-instance-key.pem" >> inventory
+13. Crie um arquivo chamado `inventory` na raiz do repositório e coloque o seguinte conteúdo nele
+
+```ini
+[all]
+ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2-instance-key.pem
 ```
 
-12. Boa! terminamos de criar todos os arquivos necessários para a criação da infraestrutura na nuvem.
+**Lembre-se de substituir `ip_da_instancia_ec2` pelo endereço IP público da instância EC2 criada pelo Terraform.**
 
-13. Agora vamos iniciar o fluxo de trabalho do Terraform para criar a infraestrutura na nuvem:
+14. Crie mais um arquivo chamado `ansible.cfg` na raiz do repositório e coloque o seguinte conteúdo nele
+
+```ini
+[defaults]
+host_key_checking = False
+```
+
+15. Boa! terminamos de criar todos os arquivos necessários para a criação da infraestrutura na nuvem.
+
+16. Agora vamos iniciar o fluxo de trabalho do Terraform para criar a infraestrutura na nuvem:
     ```bash
     terraform init
     terraform plan
@@ -296,7 +336,7 @@ echo "ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2
     > O comando `terraform plan` cria um plano de execução que mostra as alterações que serão feitas na infraestrutura na nuvem.
     > O comando `terraform apply` aplica as configurações definidas nos arquivos .tf e cria a infraestrutura na nuvem.
 
-14. Agora vamos rodar o Ansible para configurar a instância EC2:
+17. Agora vamos rodar o Ansible para configurar a instância EC2:
     ```bash
     ansible-playbook -i inventory playbook.yml
     ```
@@ -305,7 +345,7 @@ echo "ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2
     > O comando `ansible-playbook` executa o playbook definido no arquivo playbook.yml.
     > O parâmetro `-i` especifica o arquivo de inventário que contém as informações de acesso à instância EC2.
 
-15. Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.
+18. Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.
 
 > [!WARNING]
 > A maioria dos navegadores modernos força o redirecionamento da página para HTTPS
@@ -316,7 +356,7 @@ E ele deverá aparecer dessa forma:
 
 ![Site no Ar](docs/images/site.png)
 
-13. Para destruir a infraestrutura na nuvem, execute o comando abaixo:
+19. Para destruir a infraestrutura na nuvem, execute o comando abaixo:
     ```bash
     terraform destroy
     ```
