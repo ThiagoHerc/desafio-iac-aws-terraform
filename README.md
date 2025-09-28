@@ -1,4 +1,4 @@
-#**Projeto IaC: Deploy de um Web Server na AWS com Terraform e Ansible**
+**Projeto IaC: Deploy de um Web Server na AWS com Terraform e Ansible**
 
 
 Este repositório contém um projeto de Infraestrutura como Código (IaC) que automatiza o provisionamento de um servidor web na nuvem da AWS. O processo utiliza o Terraform para criar a infraestrutura e o Ansible para configurar o servidor e fazer o deploy de uma aplicação web simples.
@@ -82,6 +82,7 @@ Bash
 
 terraform destroy
 Estrutura do Projeto
+
 .
 ├── ansible.cfg             # Configurações do Ansible (desabilita host key checking)
 ├── ec2.tf                  # Define a criação da instância EC2
