@@ -1,5 +1,18 @@
-*.pem
-.terraform
 .terraform.lock.hcl
-*.tfstate
-*.tfstate.backup
+
+
+# Chaves SSH privadas
+*.pem
+
+# Arquivos de estado do Terraform
+terraform.tfstate
+terraform.tfstate.backup
+
+# Arquivos de variáveis locais (se você usar um)
+*.tfvars
+
+# Pasta de plugins e módulos do Terraform
+.terraform/
+
+# Logs de erro do Terraform
+crash.log
